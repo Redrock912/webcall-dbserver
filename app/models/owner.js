@@ -15,7 +15,7 @@ function printError(err, result) {
 }
 
 Owner.create = (newOwner, result) => {
-  sql.query("INSERT INTO place SET ?", newOwner, (err, res) => {
+  sql.query("INSERT INTO owner SET ?", newOwner, (err, res) => {
     printError(err, result);
 
     console.log("Created new owner: ", { id: res.insertId, ...newOwner });
@@ -25,7 +25,7 @@ Owner.create = (newOwner, result) => {
 
 Owner.findByUserInfo = (ownerName, ownerPassword, result) => {
   sql.query(
-    `SELECT * FROM place where name = ${ownerName} AND password = ${ownerPassword}`,
+    `SELECT * FROM owner where name = ${ownerName} AND password = ${ownerPassword}`,
     (err, res) => {
       printError(err, result);
 
@@ -48,14 +48,14 @@ Owner.getAll = result => {
       return;
     }
 
-    console.log("places: ", res);
+    console.log("owner : ", res);
     result(null, res);
   });
 };
 
 Owner.updateById = (id, owner, result) => {
   sql.query(
-    "UPDATE place SET name = ?, password = ? WHERE id = ?",
+    "UPDATE owner SET name = ?, password = ? WHERE id = ?",
     [owner.name, owner.password, id],
     (err, res) => {
       if (err) {
@@ -103,7 +103,7 @@ Owner.removeAll = result => {
       return;
     }
 
-    console.log(`deleted ${res.affectedRows} places`);
+    console.log(`deleted ${res.affectedRows} owners`);
     result(null, res);
   });
 };
