@@ -9,10 +9,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.json({ message: "welcome to gookbab application" });
+  res.json({ message: "welcome to webcall application" });
 });
 
-require("./app/routes/gookbabroutes.js")(app);
+require("./app/routes/webcallroutes.js")(app);
 
 const PORT = process.env.PORT || 3000;
 
