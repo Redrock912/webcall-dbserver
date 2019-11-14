@@ -1,5 +1,5 @@
 module.exports = app => {
-  const owner = require("../controllers/webcallcontroller");
+  const owner = require("../controllers/ownercontroller");
 
   app.post("/owner", owner.create);
 
