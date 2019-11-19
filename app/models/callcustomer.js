@@ -100,4 +100,4 @@ CallCustomer.removeAll = (owner_id, result) => {
   );
 };
 
-module.exports = Owner;
+module.exports = CallCustomer;
