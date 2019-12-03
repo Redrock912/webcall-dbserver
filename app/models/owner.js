@@ -15,20 +15,22 @@ function printError(err, result) {
 }
 
 Owner.create = (newOwner, result) => {
-  sql.query("INSERT INTO owner SET ?", newOwner, (err, res) => {
-    printError(err, result);
-
-    console.log("Created new owner: ", { id: res.insertId, ...newOwner });
-    result(null, { id: res.insertId, ...newOwner });
-  });
+  sql("owner")
+    .insert(newOwner)
+    .then(res => {
+      console.log("Created new owner: ", { id: res.insertID, ...newOwner });
+      result(null, { id: res.insertID, ...newOwner });
+    })
+    .catch(err => {
+      printError(err, result);
+    });
 };
 
 Owner.findByUserInfo = (ownerName, ownerPassword, result) => {
-  sql.query(
-    `SELECT * FROM owner where name = ${ownerName} AND password = ${ownerPassword}`,
-    (err, res) => {
-      printError(err, result);
-
+  sql
+    .from("owner")
+    .where({ name: ownerName, password: ownerPassword })
+    .then(res => {
       if (res.length) {
         console.log("found owner: ", res[0]);
         result(null, res[0]);
@@ -36,76 +38,81 @@ Owner.findByUserInfo = (ownerName, ownerPassword, result) => {
       }
 
       result({ kind: "not_found" }, null);
-    }
-  );
+    })
+    .catch(err => {
+      printError(err, result);
+    });
 };
 
 Owner.getAll = result => {
-  sql.query("SELECT * FROM owner", (err, res) => {
-    if (err) {
+  sql
+    .from("owner")
+    .select()
+    .then(res => {
+      console.log("owners: ", res);
+      result(null, res);
+    })
+    .catch(err => {
       console.log("error: ", err);
       result(null, err);
       return;
-    }
-
-    console.log("owner : ", res);
-    result(null, res);
-  });
+    });
 };
 
 Owner.updateById = (id, owner, result) => {
-  sql.query(
-    "UPDATE owner SET name = ?, password = ? WHERE id = ?",
-    [owner.name, owner.password, id],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
+  knex("owner")
+    .where("id", id)
+    .update({
+      name: owner.name,
+      password: owner.password
+    })
+    .then(res => {
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
         return;
       }
+      console.log("updated owner: ", { id: id, ...owner });
+      result(null, { id: id, ...owner });
+    })
+    .catch(err => {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    });
+};
 
+Owner.remove = (id, result) => {
+  sql("owner")
+    .where("id", id)
+    .del()
+    .then(res => {
       if (res.affectedRows == 0) {
-        // not found Customer with the id
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated owner : ", { id: id, ...owner });
-      result(null, { id: id, ...owner });
-    }
-  );
-};
-
-Owner.remove = (id, result) => {
-  sql.query("DELETE FROM owner WHERE id = ?", id, (err, res) => {
-    if (err) {
+      console.log("deleted owner with id: ", id);
+      result(null, res);
+    })
+    .catch(err => {
       console.log("error: ", err);
       result(null, err);
       return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found Customer with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted owner with id: ", id);
-    result(null, res);
-  });
+    });
 };
 
 Owner.removeAll = result => {
-  sql.query("DELETE FROM owner", (err, res) => {
-    if (err) {
+  sql("owner")
+    .del()
+    .then(res => {
+      console.log(`deleted ${res.affectedRows} owners`);
+      result(null, res);
+    })
+    .catch(err => {
       console.log("error: ", err);
       result(null, err);
       return;
-    }
-
-    console.log(`deleted ${res.affectedRows} owners`);
-    result(null, res);
-  });
+    });
 };
 
 module.exports = Owner;
