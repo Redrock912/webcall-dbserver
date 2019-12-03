@@ -1,11 +1,14 @@
 const mysql = require("mysql");
 const config = require("../config/db.config.js");
 
-const connection = mysql.createPool({
-  host: config.HOST,
-  user: config.USER,
-  password: config.PASSWORD,
-  database: config.DB
+const knex = require("knex")({
+  client: "mysql",
+  connection: {
+    host: config.HOST,
+    user: config.USER,
+    password: config.PASSWORD,
+    database: config.DB
+  }
 });
 
-module.exports = connection;
+module.exports = knex;

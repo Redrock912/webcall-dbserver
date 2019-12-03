@@ -16,15 +16,18 @@ function printError(err, result) {
 }
 
 CallCustomer.create = (newCallCustomer, result) => {
-  sql.query("INSERT INTO callcustomer SET ?", newCallCustomer, (err, res) => {
-    printError(err, result);
-
-    console.log("Created new callcustmer: ", {
-      id: res.insertId,
-      ...newCallCustomer
+  sql("callcustomer")
+    .insert(newCallCustomer)
+    .then(res => {
+      console.log("Created new callcustmer: ", {
+        id: res.insertId,
+        ...newCallCustomer
+      });
+      result(null, { id: res.insertId, ...newCallCustomer });
+    })
+    .catch(err => {
+      printError(err, result);
     });
-    result(null, { id: res.insertId, ...newCallCustomer });
-  });
 };
 
 CallCustomer.findByUserInfo = (
@@ -33,11 +36,14 @@ CallCustomer.findByUserInfo = (
   callCustomerOwnerId,
   result
 ) => {
-  sql.query(
-    `SELECT * FROM callcustomer where name = ${callCustomerName} AND password = ${callCustomerPassword} AND owner_id = ${callCustomerOwnerId}`,
-    (err, res) => {
-      printError(err, result);
-
+  sql
+    .from("callcustomer")
+    .where({
+      name: callCustomerName,
+      password: callCustomerPassword,
+      owner_id: callCustomerOwnerId
+    })
+    .then(res => {
       if (res.length) {
         console.log("found callcustomer: ", res[0]);
         result(null, res[0]);
@@ -45,59 +51,60 @@ CallCustomer.findByUserInfo = (
       }
 
       result({ kind: "not_found" }, null);
-    }
-  );
+    })
+    .catch(err => {
+      printError(err, result);
+    });
 };
 
 CallCustomer.getAll = (owner_id, result) => {
-  sql.query(
-    `SELECT * FROM callcustomer where owner_id = ${owner_id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-
+  sql
+    .from("callcustomer")
+    .where("owner_id", owner_id)
+    .then(res => {
       console.log("callcustomer : ", res);
       result(null, res);
-    }
-  );
-};
-
-CallCustomer.remove = (id, result) => {
-  sql.query("DELETE FROM callcustomer WHERE id = ?", id, (err, res) => {
-    if (err) {
+    })
+    .catch(err => {
       console.log("error: ", err);
       result(null, err);
       return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found Customer with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted callcustomer with id: ", id);
-    result(null, res);
-  });
+    });
 };
 
-CallCustomer.removeAll = (owner_id, result) => {
-  sql.query(
-    `DELETE FROM callcustomer where owner_id = ${owner_id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
+CallCustomer.remove = (id, result) => {
+  sql("callcustomer")
+    .where("id", id)
+    .del()
+    .then(res => {
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
         return;
       }
 
+      console.log("deleted callcustomer with id: ", id);
+      result(null, res);
+    })
+    .catch(err => {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    });
+};
+
+CallCustomer.removeAll = (owner_id, result) => {
+  sql("callcustomer")
+    .where("owner_id", owner_id)
+    .del()
+    .then(res => {
       console.log(`deleted ${res.affectedRows} callcustomer`);
       result(null, res);
-    }
-  );
+    })
+    .catch(err => {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    });
 };
 
 module.exports = CallCustomer;
