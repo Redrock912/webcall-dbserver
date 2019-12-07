@@ -4,7 +4,7 @@ const CallCustomer = function(callcustomer) {
   this.id = callcustomer.id;
   this.name = callcustomer.name;
   this.password = callcustomer.password;
-  this.owner_id = callcustomer.owner_id;
+  this.expo_token = callcustomer.expo_token;
 };
 
 function printError(err, result) {
@@ -33,7 +33,7 @@ CallCustomer.create = (newCallCustomer, result) => {
 CallCustomer.findByUserInfo = (
   callCustomerName,
   callCustomerPassword,
-  callCustomerOwnerId,
+  callCustomerExpoToken,
   result
 ) => {
   sql
@@ -41,7 +41,7 @@ CallCustomer.findByUserInfo = (
     .where({
       name: callCustomerName,
       password: callCustomerPassword,
-      owner_id: callCustomerOwnerId
+      expo_token: callCustomerExpoToken
     })
     .then(res => {
       if (res.length) {
@@ -57,10 +57,9 @@ CallCustomer.findByUserInfo = (
     });
 };
 
-CallCustomer.getAll = (owner_id, result) => {
+CallCustomer.getAll = result => {
   sql
     .from("callcustomer")
-    .where("owner_id", owner_id)
     .then(res => {
       console.log("callcustomer : ", res);
       result(null, res);
@@ -74,7 +73,7 @@ CallCustomer.getAll = (owner_id, result) => {
 
 CallCustomer.remove = (id, result) => {
   sql("callcustomer")
-    .where("id", id)
+    .where({ id: id })
     .del()
     .then(res => {
       if (res.affectedRows == 0) {
@@ -92,9 +91,8 @@ CallCustomer.remove = (id, result) => {
     });
 };
 
-CallCustomer.removeAll = (owner_id, result) => {
+CallCustomer.removeAll = result => {
   sql("callcustomer")
-    .where("owner_id", owner_id)
     .del()
     .then(res => {
       console.log(`deleted ${res.affectedRows} callcustomer`);

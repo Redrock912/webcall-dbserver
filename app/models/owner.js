@@ -60,7 +60,7 @@ Owner.getAll = result => {
 };
 
 Owner.updateById = (id, owner, result) => {
-  knex("owner")
+  sql("owner")
     .where("id", id)
     .update({
       name: owner.name,
@@ -83,7 +83,7 @@ Owner.updateById = (id, owner, result) => {
 
 Owner.remove = (id, result) => {
   sql("owner")
-    .where("id", id)
+    .where({ id: id })
     .del()
     .then(res => {
       if (res.affectedRows == 0) {

@@ -10,7 +10,7 @@ exports.create = (req, res) => {
   const callcustomer = new CallCustomer({
     name: req.body.name,
     password: req.body.password,
-    owner_id: req.body.owner_id
+    expo_token: req.body.expo_token
   });
 
   CallCustomer.create(callcustomer, (err, data) => {
@@ -25,29 +25,29 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findAll = (req, res) => {
-  CallCustomer.getAll(req.params.owner_id, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving callcustomer"
-      });
-    } else {
-      res.send(data);
-    }
-  });
-};
+// exports.findAll = (req, res) => {
+//   CallCustomer.getAll(req.params., (err, data) => {
+//     if (err) {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while retrieving callcustomer"
+//       });
+//     } else {
+//       res.send(data);
+//     }
+//   });
+// };
 
 exports.findOne = (req, res) => {
   CallCustomer.findByUserInfo(
     req.params.name,
     req.params.password,
-    req.params.owner_id,
+    req.params.expo_token,
     (err, data) => {
       if (err) {
         if (err.kind == "not_found") {
           res.status(404).send({
-            message: `Not found callcustomer with name ${req.params.name}, password ${req.params.password}, owner_id ${req.params.owner_id}`
+            message: `Not found callcustomer with name ${req.params.name}, password ${req.params.password}, expo_token ${req.params.expo_token}`
           });
         } else {
           res.status(500).send({
@@ -78,17 +78,17 @@ exports.delete = (req, res) => {
   });
 };
 
-exports.deleteAll = (req, res) => {
-  CallCustomer.removeAll(req.body.owner_id, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all callcustomers"
-      });
-    } else {
-      res.send({
-        message: `All callcustomers were deleted successfully`
-      });
-    }
-  });
-};
+// exports.deleteAll = (req, res) => {
+//   CallCustomer.removeAll(req.body.owner_id, (err, data) => {
+//     if (err) {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while removing all callcustomers"
+//       });
+//     } else {
+//       res.send({
+//         message: `All callcustomers were deleted successfully`
+//       });
+//     }
+//   });
+// };
