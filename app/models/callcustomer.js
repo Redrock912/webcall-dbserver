@@ -26,7 +26,8 @@ CallCustomer.create = (newCallCustomer, result) => {
       result(null, { id: res.insertId, ...newCallCustomer });
     })
     .catch(err => {
-      printError(err, result);
+      console.log(err);
+      //printError(err, result);
     });
 };
 
