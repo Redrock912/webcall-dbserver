@@ -15,8 +15,8 @@ module.exports = app => {
   app.delete("/owner", owner.deleteAll);
 
   app.post("/callcustomer", callcustomer.create);
-  //app.get("/callcustomer/:owner_id", callcustomer.findAll);
-  app.get("/callcustomer/:name/:password/:owner_id", callcustomer.findOne);
+  app.get("/callcustomer", callcustomer.findAll);
+  app.get("/callcustomer/:name/:password/:expo_token", callcustomer.findOne);
   app.delete("/callcustomer/:id", callcustomer.delete);
   //app.delete("/callcustomer/:owner_id", callcustomer.deleteAll);
 };

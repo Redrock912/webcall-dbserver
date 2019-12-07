@@ -25,18 +25,18 @@ exports.create = (req, res) => {
   });
 };
 
-// exports.findAll = (req, res) => {
-//   CallCustomer.getAll(req.params., (err, data) => {
-//     if (err) {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving callcustomer"
-//       });
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// };
+exports.findAll = (req, res) => {
+  CallCustomer.getAll((err, data) => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving callcustomer"
+      });
+    } else {
+      res.send(data);
+    }
+  });
+};
 
 exports.findOne = (req, res) => {
   CallCustomer.findByUserInfo(
