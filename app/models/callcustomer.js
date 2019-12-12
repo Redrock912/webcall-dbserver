@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+import expo from "expo-server-sdk";
 
 const CallCustomer = function(callcustomer) {
   this.id = callcustomer.id;
@@ -10,6 +11,7 @@ const CallCustomer = function(callcustomer) {
 function printError(err, result) {
   if (err) {
     console.log("error: ", err);
+
     result(err, null);
     return;
   }
@@ -103,6 +105,20 @@ CallCustomer.removeAll = result => {
       result(null, err);
       return;
     });
+};
+
+CallCustomer.orderComplete = token => {
+  let messages = [];
+  if (!expo.isExpoPushToken(token)) {
+    console.error(`push token ${token} is not a valid Expo push token`);
+  } else {
+    messages.push({
+      to: token,
+      sound: "default",
+      test: "asdf",
+      body: "아아 이것은 테스트이다"
+    });
+  }
 };
 
 module.exports = CallCustomer;
