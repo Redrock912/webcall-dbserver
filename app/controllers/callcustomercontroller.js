@@ -78,16 +78,24 @@ exports.delete = (req, res) => {
   });
 };
 
-exports.orderDone = req => {
-  CallCustomer.orderComplete(req.params.expo_token, err => {
-    if (err.kind === "not_found") {
+exports.orderDone = (req, res) => {
+  CallCustomer.orderComplete(req.body, (err, data) => {
+    // console.log("asdf " + req);
+    // if (err.kind === "not_found") {
+    //   res.status(404).send({
+    //     message: `Not found callcustomer with token `
+    //   });
+    // } else {
+    //   res.status(500).send({
+    //     message: "Could not send callcustomer with token "
+    //   });
+    // }
+    if (err) {
       res.status(404).send({
-        message: `Not found callcustomer with token `
+        message: "Not found callcustomer with token "
       });
     } else {
-      res.status(500).send({
-        message: "Could not send callcustomer with token "
-      });
+      res.send(data);
     }
   });
 };
