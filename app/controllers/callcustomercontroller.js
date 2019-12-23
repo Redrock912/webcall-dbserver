@@ -9,18 +9,19 @@ exports.create = (req, res) => {
 
   const callcustomer = new CallCustomer({
     name: req.body.name,
-    password: req.body.password,
     expo_token: req.body.expo_token
   });
 
   CallCustomer.create(callcustomer, (err, data) => {
     if (err) {
-      res.status(500).send({
-        message:
-          err.message || "Some error occured while creating callcustomer."
-      });
+      let errorData = {
+        value: 0,
+        message: "회원가입을 하는데에 문제가 발생하였습니다."
+      };
+      res.send(errorData);
     } else {
-      res.send(data);
+      let newData = { value: 1, message: "회원가입에 성공하였습니다." };
+      res.send(newData);
     }
   });
 };
@@ -41,13 +42,12 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   CallCustomer.findByUserInfo(
     req.params.name,
-    req.params.password,
     req.params.expo_token,
     (err, data) => {
       if (err) {
         if (err.kind == "not_found") {
           res.status(404).send({
-            message: `Not found callcustomer with name ${req.params.name}, password ${req.params.password}, expo_token ${req.params.expo_token}`
+            message: `Not found callcustomer with name ${req.params.name},expo_token ${req.params.expo_token}`
           });
         } else {
           res.status(500).send({

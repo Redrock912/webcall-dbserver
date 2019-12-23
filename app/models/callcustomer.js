@@ -6,7 +6,6 @@ let expo = new Expo();
 const CallCustomer = function(callcustomer) {
   this.id = callcustomer.id;
   this.name = callcustomer.name;
-  this.password = callcustomer.password;
   this.expo_token = callcustomer.expo_token;
 };
 
@@ -36,7 +35,6 @@ CallCustomer.create = (newCallCustomer, result) => {
 
 CallCustomer.findByUserInfo = (
   callCustomerName,
-  callCustomerPassword,
   callCustomerExpoToken,
   result
 ) => {
@@ -44,7 +42,6 @@ CallCustomer.findByUserInfo = (
     .from("callcustomer")
     .where({
       name: callCustomerName,
-      password: callCustomerPassword,
       expo_token: callCustomerExpoToken
     })
     .then(res => {
