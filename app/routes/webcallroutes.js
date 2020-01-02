@@ -16,7 +16,7 @@ module.exports = app => {
 
   //app.post("/owner/:id", owner.sendInfo);
 
-  app.post("/callcustomer/:id", callcustomer.orderDone);
+  app.post("/callcustomer/:ownerId", callcustomer.orderRecieved);
 
   //app.delete("/callcustomer/:owner_id", callcustomer.deleteAll);
 };

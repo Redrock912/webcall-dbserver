@@ -79,23 +79,25 @@ exports.delete = (req, res) => {
 };
 
 exports.orderDone = (req, res) => {
-  CallCustomer.orderComplete(req.body, (err, data) => {
-    // console.log("asdf " + req);
-    // if (err.kind === "not_found") {
-    //   res.status(404).send({
-    //     message: `Not found callcustomer with token `
-    //   });
-    // } else {
-    //   res.status(500).send({
-    //     message: "Could not send callcustomer with token "
-    //   });
-    // }
-    if (err) {
+  CallCustomer.orderComplete(req.body, (error, data) => {
+    if (error) {
       res.status(404).send({
         message: "Not found callcustomer with token "
       });
     } else {
-      res.send(data);
+      res.send({ message: `Callcustomer order is done` });
+    }
+  });
+};
+
+exports.orderRecieved = (req, res) => {
+  CallCustomer.orderRecieved(req.body, req.params.ownerId, error => {
+    if (error) {
+      res.status(404).send({
+        message: "Not found callcustomer with token "
+      });
+    } else {
+      res.send({ message: `Callcustomer order recieved` });
     }
   });
 };
