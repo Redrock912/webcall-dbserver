@@ -9,6 +9,9 @@ module.exports = app => {
   app.delete("/owner/:id", owner.delete);
   app.delete("/owner", owner.deleteAll);
 
+  app.post("/owner/:id", owner.orderConfirmed);
+  app.post("/owner/:id/:number", owner.orderComplete);
+
   app.post("/callcustomer", callcustomer.create);
   app.get("/callcustomer", callcustomer.findAll);
   app.get("/callcustomer/:name/:password/:expo_token", callcustomer.findOne);

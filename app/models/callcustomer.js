@@ -120,7 +120,7 @@ CallCustomer.orderRecieved = (body, id, result) => {
     result(null);
   } else {
     // for test purpose, callcustomer
-    sql("owner")
+    sql("callcustomer")
       .where({ id: id })
       .then(res => {
         ownerToken = res[0].expo_token;

@@ -91,7 +91,7 @@ exports.orderDone = (req, res) => {
 };
 
 exports.orderRecieved = (req, res) => {
-  CallCustomer.orderRecieved(req.body, req.params.ownerId, error => {
+  CallCustomer.orderRecieved(req.body, req.params.ownerId, (error, result) => {
     if (error) {
       res.status(404).send({
         message: "Not found callcustomer with token "

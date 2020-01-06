@@ -104,3 +104,32 @@ exports.deleteAll = (req, res) => {
     }
   });
 };
+
+exports.orderConfirmed = (req, res) => {
+  Owner.orderConfirmed(req.body.number, req.body.expo_token, err => {
+    if (err) {
+      res.status(500).send({
+        message: "Error occurred while sending order Confirmation"
+      });
+    } else {
+      res.send({
+        message: "Order Confirm notification sent successfully"
+      });
+    }
+  });
+};
+
+exports.orderComplete = (req, res) => {
+  Owner.orderComplete(req.body.number, req.body.expo_token, err => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while sending order notification"
+      });
+    } else {
+      res.send({
+        message: "order number sent successfully"
+      });
+    }
+  });
+};
