@@ -133,8 +133,8 @@ CallCustomer.orderRecieved = (body, id, result) => {
           sound: "default",
           body: "This is a text",
           data: {
-            target: "TestNumber1234",
-            pay: "3000",
+            name: body.name,
+            number: 0,
             token: body.expo_token
           }
         });
