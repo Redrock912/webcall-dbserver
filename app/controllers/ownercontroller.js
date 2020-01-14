@@ -9,7 +9,7 @@ exports.create = (req, res) => {
 
   const owner = new Owner({
     name: req.body.name,
-    password: req.body.password
+    expo_token: req.body.expo_token
   });
 
   Owner.create(owner, (err, data) => {
