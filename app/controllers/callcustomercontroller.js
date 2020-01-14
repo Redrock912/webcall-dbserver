@@ -90,16 +90,20 @@ exports.orderDone = (req, res) => {
   });
 };
 
-exports.orderRecieved = (req, res) => {
-  CallCustomer.orderRecieved(req.body, req.params.ownerId, (error, result) => {
-    if (error) {
-      res.status(404).send({
-        message: "Not found callcustomer with token "
-      });
-    } else {
-      res.send({ message: `Callcustomer order recieved` });
+exports.orderConfirmed = (req, res) => {
+  CallCustomer.orderConfirmed(
+    req.body.number,
+    req.body.expo_token,
+    (error, result) => {
+      if (error) {
+        res.status(404).send({
+          message: "Not found callcustomer with token "
+        });
+      } else {
+        res.send({ message: `Callcustomer order recieved` });
+      }
     }
-  });
+  );
 };
 
 // exports.deleteAll = (req, res) => {

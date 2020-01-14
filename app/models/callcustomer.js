@@ -106,68 +106,44 @@ CallCustomer.removeAll = result => {
     });
 };
 
-CallCustomer.orderRecieved = (body, id, result) => {
+CallCustomer.orderConfirmed = (number, token, result) => {
   let messages = [];
 
-  let ownerToken = [];
-
-  console.log(body.expo_token + " asdf");
-  if (!Expo.isExpoPushToken(body.expo_token)) {
-    console.log(body.expo_token);
-    console.error(
-      `push token ${body.expo_token} is not a valid Expo push token`
-    );
+  if (!Expo.isExpoPushToken(token)) {
+    console.log(token);
+    console.error(`push token ${token} is not a valid Expo push token`);
     result(null);
+    return;
   } else {
-    // for test purpose, callcustomer
-    sql("callcustomer")
-      .where({ id: id })
-      .then(res => {
-        ownerToken = res[0].expo_token;
-        return res[0].expo_token;
-      })
-      .then(res => {
-        console.log(res);
-        messages.push({
-          to: res,
-          sound: "default",
-          body: "This is a text",
-          data: {
-            name: body.name,
-            number: 0,
-            token: body.expo_token
-          }
-        });
-      })
-      .then(res => {
-        let chunks = expo.chunkPushNotifications(messages);
-        let tickets = [];
-        (async () => {
-          // Send the chunks to the Expo push notification service. There are
-          // different strategies you could use. A simple one is to send one chunk at a
-          // time, which nicely spreads the load out over time:
-          for (let chunk of chunks) {
-            try {
-              let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-              //console.log(ticketChunk);
-              tickets.push(...ticketChunk);
-              // NOTE: If a ticket contains an error code in ticket.details.error, you
-              // must handle it appropriately. The error codes are listed in the Expo
-              // documentation:
-              // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
-            } catch (error) {
-              console.error(error);
-            }
-          }
-          result(null, res);
-          return;
-        })();
-      })
-      .catch(error => {
-        console.log("asdf");
-        result(error);
-        return;
-      });
+    messages.push({
+      to: token,
+      sound: "default",
+      body: "Your order has been recieved. Please check your order number.",
+      data: { number: number }
+    });
+
+    let chunks = expo.chunkPushNotifications(messages);
+    let tickets = [];
+    (async () => {
+      // Send the chunks to the Expo push notification service. There are
+      // different strategies you could use. A simple one is to send one chunk at a
+      // time, which nicely spreads the load out over time:
+      for (let chunk of chunks) {
+        try {
+          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+          //console.log(ticketChunk);
+          tickets.push(...ticketChunk);
+          // NOTE: If a ticket contains an error code in ticket.details.error, you
+          // must handle it appropriately. The error codes are listed in the Expo
+          // documentation:
+          // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+    result(null);
+    return;
   }
 };
 

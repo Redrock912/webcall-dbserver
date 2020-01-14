@@ -9,7 +9,7 @@ module.exports = app => {
   app.delete("/owner/:id", owner.delete);
   app.delete("/owner", owner.deleteAll);
 
-  app.post("/owner/:id", owner.orderConfirmed);
+  app.post("/owner/:id", owner.orderRecieved);
   app.post("/owner/:id/:number", owner.orderComplete);
 
   app.post("/callcustomer", callcustomer.create);
@@ -19,7 +19,7 @@ module.exports = app => {
 
   //app.post("/owner/:id", owner.sendInfo);
 
-  app.post("/callcustomer/:ownerId", callcustomer.orderRecieved);
+  app.post("/callcustomer/:ownerId", callcustomer.orderConfirmed);
 
   //app.delete("/callcustomer/:owner_id", callcustomer.deleteAll);
 };

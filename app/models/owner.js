@@ -6,7 +6,7 @@ let expo = new Expo();
 const Owner = function(owner) {
   this.id = owner.id;
   this.name = owner.name;
-  this.password = owner.password;
+  this.expo_token = owner.expo_token;
 };
 
 function printError(err, result) {
@@ -29,10 +29,10 @@ Owner.create = (newOwner, result) => {
     });
 };
 
-Owner.findByUserInfo = (ownerName, ownerPassword, result) => {
+Owner.findByUserInfo = (ownerID, result) => {
   sql
     .from("owner")
-    .where({ name: ownerName, password: ownerPassword })
+    .where({ id: ownerID })
     .then(res => {
       if (res.length) {
         console.log("found owner: ", res[0]);
@@ -118,44 +118,64 @@ Owner.removeAll = result => {
     });
 };
 
-Owner.orderConfirmed = (number, token, result) => {
+Owner.orderRecieved = (body, ownerID, result) => {
   let messages = [];
+  let ownerToken = [];
 
-  if (!Expo.isExpoPushToken(token)) {
-    console.log(token);
-    console.error(`push token ${token} is not a valid Expo push token`);
+  if (!Expo.isExpoPushToken(body.expo_token)) {
+    console.error(
+      `push token ${body.expo_token} is not a valid Expo push token`
+    );
     result(null);
-    return;
   } else {
-    messages.push({
-      to: token,
-      sound: "default",
-      body: "Your order has been recieved. Please check your order number.",
-      data: { number: number }
-    });
-
-    let chunks = expo.chunkPushNotifications(messages);
-    let tickets = [];
-    (async () => {
-      // Send the chunks to the Expo push notification service. There are
-      // different strategies you could use. A simple one is to send one chunk at a
-      // time, which nicely spreads the load out over time:
-      for (let chunk of chunks) {
-        try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          //console.log(ticketChunk);
-          tickets.push(...ticketChunk);
-          // NOTE: If a ticket contains an error code in ticket.details.error, you
-          // must handle it appropriately. The error codes are listed in the Expo
-          // documentation:
-          // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    })();
-    result(null);
-    return;
+    // for test purpose, callcustomer
+    sql("owner")
+      .where({ id: ownerID })
+      .then(res => {
+        ownerToken = res[0].expo_token;
+        return res[0].expo_token;
+      })
+      .then(res => {
+        messages.push({
+          to: res,
+          sound: "default",
+          body: "주문이 들어왔습니다. 확인해 주세요.",
+          data: {
+            name: body.name,
+            number: 0,
+            token: body.expo_token
+          }
+        });
+      })
+      .then(res => {
+        let chunks = expo.chunkPushNotifications(messages);
+        let tickets = [];
+        (async () => {
+          // Send the chunks to the Expo push notification service. There are
+          // different strategies you could use. A simple one is to send one chunk at a
+          // time, which nicely spreads the load out over time:
+          for (let chunk of chunks) {
+            try {
+              let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+              //console.log(ticketChunk);
+              tickets.push(...ticketChunk);
+              // NOTE: If a ticket contains an error code in ticket.details.error, you
+              // must handle it appropriately. The error codes are listed in the Expo
+              // documentation:
+              // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          result(null, res);
+          return;
+        })();
+      })
+      .catch(error => {
+        console.log("asdf");
+        result(error);
+        return;
+      });
   }
 };
 

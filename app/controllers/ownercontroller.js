@@ -36,15 +36,15 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  Owner.findByUserInfo(req.params.name, req.params.password, (err, data) => {
+  Owner.findByUserInfo(req.params.id, (err, data) => {
     if (err) {
       if (err.kind == "not_found") {
         res.status(404).send({
-          message: `Not found owner with name ${req.params.name}, password ${req.params.password}`
+          message: `Not found owner with id ${req.params.id}`
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving owner with name " + req.params.name
+          message: "Error retrieving owner with id " + req.params.id
         });
       }
     } else {
@@ -105,18 +105,29 @@ exports.deleteAll = (req, res) => {
   });
 };
 
-exports.orderConfirmed = (req, res) => {
-  Owner.orderConfirmed(req.body.number, req.body.expo_token, err => {
-    if (err) {
-      res.status(500).send({
-        message: "Error occurred while sending order Confirmation"
+exports.orderRecieved = (req, res) => {
+  Owner.orderRecieved(req.body, req.params.ownerId, (error, result) => {
+    if (error) {
+      res.status(404).send({
+        message: "Not found owner with id "
       });
     } else {
-      res.send({
-        message: "Order Confirm notification sent successfully"
-      });
+      res.send({ message: `Owner ${req.params.ownerId} just recieved order` });
     }
   });
+
+  // (req, res) => {
+  //   Owner.orderRecieved(req.body.number, req.body.expo_token, err => {
+  //     if (err) {
+  //       res.status(500).send({
+  //         message: "Error occurred while sending order Confirmation"
+  //       });
+  //     } else {
+  //       res.send({
+  //         message: "Order Confirm notification sent successfully"
+  //       });
+  //     }
+  //   });
 };
 
 exports.orderComplete = (req, res) => {
