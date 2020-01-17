@@ -22,7 +22,23 @@ CallCustomer.create = (newCallCustomer, result) => {
   sql("callcustomer")
     .insert(newCallCustomer)
     .then(res => {
-      console.log("Created new callcustmer: ", {
+      console.log("Created new callcustomer: ", {
+        id: res.insertId,
+        ...newCallCustomer
+      });
+      result(null, { id: res.insertId, ...newCallCustomer });
+    })
+    .catch(err => {
+      printError(err, result);
+    });
+};
+
+CallCustomer.update = (newName, expo_token, result) => {
+  sql("callcustomer")
+    .where({ expo_token: expo_token })
+    .update({ name: newName })
+    .then(res => {
+      console.log("Updated callcustomer: ", {
         id: res.insertId,
         ...newCallCustomer
       });

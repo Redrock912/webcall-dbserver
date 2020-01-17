@@ -20,8 +20,26 @@ exports.create = (req, res) => {
       };
       res.send(errorData);
     } else {
-      let newData = { value: 1, message: "회원가입에 성공하였습니다." };
-      res.send(newData);
+      res.send(data);
+    }
+  });
+};
+
+exports.update = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "No data recieved. "
+    });
+  }
+
+  CallCustomer.update(req.body.name, req.body.expo_token, (err, data) => {
+    if (err) {
+      let errorData = {
+        message: "이름을 변경하는데에 문제가 발생했습니다."
+      };
+      res.send(errorData);
+    } else {
+      res.send(data);
     }
   });
 };

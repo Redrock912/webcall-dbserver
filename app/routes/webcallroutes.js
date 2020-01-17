@@ -13,6 +13,7 @@ module.exports = app => {
   app.post("/owner/:id/:number", owner.orderComplete);
 
   app.post("/callcustomer", callcustomer.create);
+  app.put("/callcustomer", callcustomer.update);
   app.get("/callcustomer", callcustomer.findAll);
   app.get("/callcustomer/:name/:password/:expo_token", callcustomer.findOne);
   app.delete("/callcustomer/:id", callcustomer.delete);
