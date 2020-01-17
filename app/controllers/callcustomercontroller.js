@@ -37,6 +37,7 @@ exports.update = (req, res) => {
       let errorData = {
         message: "이름을 변경하는데에 문제가 발생했습니다."
       };
+      console.log(err);
       res.send(errorData);
     } else {
       res.send(data);

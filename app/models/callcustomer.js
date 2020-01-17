@@ -37,12 +37,12 @@ CallCustomer.update = (newName, expo_token, result) => {
   sql("callcustomer")
     .where({ expo_token: expo_token })
     .update({ name: newName })
-    .then(res => {
-      console.log("Updated callcustomer: ", {
-        id: res.insertId,
-        ...newCallCustomer
-      });
-      result(null, { id: res.insertId, ...newCallCustomer });
+    .then(resultBoolean => {
+      if (resultBoolean) {
+        result(null);
+      } else {
+        result({ kind: "Not found" }, null);
+      }
     })
     .catch(err => {
       printError(err, result);
