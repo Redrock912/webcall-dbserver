@@ -106,13 +106,13 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.orderRecieved = (req, res) => {
-  Owner.orderRecieved(req.body, req.params.ownerId, (error, result) => {
+  Owner.orderRecieved(req.body, req.params.id, (error, result) => {
     if (error) {
       res.status(404).send({
-        message: "Not found owner with id "
+        message: `Not found owner with id ${req.params.id}`
       });
     } else {
-      res.send({ message: `Owner ${req.params.ownerId} just recieved order` });
+      res.send({ message: `Owner ${req.params.id} just recieved order` });
     }
   });
 
