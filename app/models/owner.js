@@ -20,9 +20,10 @@ function printError(err, result) {
 Owner.create = (newOwner, result) => {
   sql("owner")
     .insert(newOwner)
+    .returning("id")
     .then(res => {
-      console.log("Created new owner: ", { id: res.insertId, ...newOwner });
-      result(null, { id: res.insertId, ...newOwner });
+      console.log("Created new owner: ", { id: res[0], ...newOwner });
+      result(null, { id: res[0], ...newOwner });
     })
     .catch(err => {
       printError(err, result);
