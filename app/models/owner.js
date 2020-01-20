@@ -21,8 +21,8 @@ Owner.create = (newOwner, result) => {
   sql("owner")
     .insert(newOwner)
     .then(res => {
-      console.log("Created new owner: ", { id: res.insertID, ...newOwner });
-      result(null, { id: res.insertID, ...newOwner });
+      console.log("Created new owner: ", { id: res.insertId, ...newOwner });
+      result(null, { id: res.insertId, ...newOwner });
     })
     .catch(err => {
       printError(err, result);
