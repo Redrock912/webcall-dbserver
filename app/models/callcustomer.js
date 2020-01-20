@@ -4,7 +4,8 @@ import Expo from "expo-server-sdk";
 let expo = new Expo();
 
 const CallCustomer = function(callcustomer) {
-  this.id = callcustomer.id;
+  // this.id -> can't put result of "insert" into the id, if it is initialized before.
+
   this.name = callcustomer.name;
   this.expo_token = callcustomer.expo_token;
 };
@@ -23,10 +24,10 @@ CallCustomer.create = (newCallCustomer, result) => {
     .insert(newCallCustomer)
     .then(res => {
       console.log("Created new callcustomer: ", {
-        id: res.insertId,
+        id: res,
         ...newCallCustomer
       });
-      result(null, { id: res.insertId, ...newCallCustomer });
+      result(null, { id: res, ...newCallCustomer });
     })
     .catch(err => {
       printError(err, result);

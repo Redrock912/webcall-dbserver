@@ -4,7 +4,7 @@ import Expo from "expo-server-sdk";
 let expo = new Expo();
 
 const Owner = function(owner) {
-  this.id = owner.id;
+  // this.id -> can't put result of "insert" into the id, if it is initialized before.
   this.name = owner.name;
   this.expo_token = owner.expo_token;
 };
@@ -20,10 +20,10 @@ function printError(err, result) {
 Owner.create = (newOwner, result) => {
   sql("owner")
     .insert(newOwner)
-    .returning("id")
     .then(res => {
-      console.log("Created new owner: ", { id: res[0], ...newOwner });
-      result(null, { id: res[0], ...newOwner });
+      // knex returns the insert id as result.
+      console.log("created owner with id : ", { id: res, ...newOwner });
+      result(null, { id: res, ...newOwner });
     })
     .catch(err => {
       printError(err, result);
