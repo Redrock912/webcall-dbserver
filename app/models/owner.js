@@ -142,6 +142,7 @@ Owner.orderRecieved = (body, ownerID, result) => {
           sound: "default",
           body: "주문이 들어왔습니다. 확인해 주세요.",
           data: {
+            target: "OrderListTab",
             name: body.name,
             number: 0,
             token: body.expo_token
@@ -193,7 +194,7 @@ Owner.orderComplete = (number, token, result) => {
       to: token,
       sound: "default",
       body: "주문이 완료되었습니다. 카운터로 와주세요.",
-      data: { number: number, type: "complete" }
+      data: { target: "OrderListTab", number: number, type: "complete" }
     });
 
     let chunks = expo.chunkPushNotifications(messages);
