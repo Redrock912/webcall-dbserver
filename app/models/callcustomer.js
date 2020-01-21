@@ -136,7 +136,7 @@ CallCustomer.orderConfirmed = (number, token, result) => {
       to: token,
       sound: "default",
       body: "Your order has been recieved. Please check your order number.",
-      data: { number: number }
+      data: { number: number, type: "confirm" }
     });
 
     let chunks = expo.chunkPushNotifications(messages);

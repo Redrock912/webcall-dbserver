@@ -192,8 +192,8 @@ Owner.orderComplete = (number, token, result) => {
     messages.push({
       to: token,
       sound: "default",
-      body: "Your order has been recieved. Please check your order number.",
-      data: { number: number }
+      body: "주문이 완료되었습니다. 카운터로 와주세요.",
+      data: { number: number, type: "complete" }
     });
 
     let chunks = expo.chunkPushNotifications(messages);

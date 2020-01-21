@@ -10,7 +10,7 @@ module.exports = app => {
   app.delete("/owner", owner.deleteAll);
 
   app.post("/owner/:id", owner.orderRecieved);
-  app.post("/owner/:id/:number", owner.orderComplete);
+  app.post("/orderComplete/", owner.orderComplete);
 
   app.post("/callcustomer", callcustomer.create);
   app.put("/callcustomer", callcustomer.update);
