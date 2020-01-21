@@ -20,7 +20,7 @@ module.exports = app => {
 
   //app.post("/owner/:id", owner.sendInfo);
 
-  app.post("/callcustomer/:ownerId", callcustomer.orderConfirmed);
+  app.post("/orderConfirmed/", callcustomer.orderConfirmed);
 
   //app.delete("/callcustomer/:owner_id", callcustomer.deleteAll);
 };
