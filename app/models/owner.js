@@ -30,6 +30,22 @@ Owner.create = (newOwner, result) => {
     });
 };
 
+Owner.update = (newName, expo_token, result) => {
+  sql("owner")
+    .where({ expo_token: expo_token })
+    .update({ name: newName })
+    .then(resultBoolean => {
+      if (resultBoolean) {
+        result(null);
+      } else {
+        result({ kind: "Not found" }, null);
+      }
+    })
+    .catch(err => {
+      printError(err, result);
+    });
+};
+
 Owner.findByUserInfo = (ownerID, result) => {
   sql
     .from("owner")

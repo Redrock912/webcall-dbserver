@@ -60,7 +60,7 @@ exports.update = (req, res) => {
     });
   }
 
-  Owner.updateById(req.params.id, new Owner(req.body), (err, data) => {
+  Owner.update(req.body.name, req.body.expo_token, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
