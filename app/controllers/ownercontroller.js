@@ -64,11 +64,11 @@ exports.update = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found owner with id ${req.params.id}.`
+          message: "Not found name"
         });
       } else {
         res.status(500).send({
-          message: "Error updating owner with id " + req.params.id
+          message: "Error updating name"
         });
       }
     } else res.send(data);
